@@ -8,12 +8,9 @@ output: pdf_document
 This project is to learn analyze baseball data with R. The source is from a book "Analyzing Baseball Data with R". This is a section of "Introduction to R".
 
 ```{r}
-#install.packages("Lahman")
 library(tidyverse)
 library(dplyr)
 library(Lahman)
-
-setwd("C:/Users/ttake/Documents/My_Data_Analysis_Projects/Analyzing_Baseball_Data_R//")
 ```
 
 ```{r}

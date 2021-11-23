@@ -4,8 +4,6 @@ library(dplyr)
 library(Lahman)
 
 
-setwd("C:/Users/ttake/Documents/My_Data_Analysis_Projects/Analyzing_Baseball_Data_R/scripts/")
-
 
 # Create a data frame for Babe Ruth
 bruth_pitch_df <- Pitching[Pitching$playerID=="ruthba01",]
