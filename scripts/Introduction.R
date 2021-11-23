@@ -251,5 +251,28 @@ SO.BB
 
 
 # 5. Pitcher Strikeout/Walk Ratios
+# (a) Read Pitching file
+head(Pitching)
 
+# (b) Compute the cumulative strikeouts, cumulative walks,mid career year, 
+# and the total innings pitched for all pitchers on the data file.
 
+career_pitching <- Pitching %>% 
+    group_by(playerID) %>% 
+    summarize(SO = sum(SO, na.rm = TRUE),
+              BB = sum(BB, na.rm = TRUE),
+              IPouts = sum(IPouts, na.rm = TRUE),
+              midYear = median(yearID, na.rm = TRUE))
+
+# Merge data sets
+career_pitching <- inner_join(Pitching,career_pitching,by="playerID")
+
+# (c) filter data (IPouts >= 10000)
+career_pitching %>% 
+    filter(IPouts.y >10000) -> career.10000
+
+head(career.10000)
+
+# (d) Scatter plot
+ggplot(career.10000, mapping = aes(x=midYear, y=SO.y/BB.y))+
+    geom_point() + geom_smooth()

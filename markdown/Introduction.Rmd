@@ -7,12 +7,14 @@ output: pdf_document
 
 This project is to learn analyze baseball data with R. The source is from a book "Analyzing Baseball Data with R". This is a section of "Introduction to R".
 
+## Setting an environment
 ```{r}
 library(tidyverse)
 library(dplyr)
 library(Lahman)
 ```
 
+## Babe Ruth analysis      
 ```{r}
 # Create a data frame for Babe Ruth
 bruth_pitch_df <- Pitching[Pitching$playerID=="ruthba01",]
@@ -57,6 +59,7 @@ plot(Age,Win.Pct)
 summary(Win.Pct)
 ```
 
+## WS analysis
 ```{r}
 # Character data and data frame
 Year <- 2008:2017
@@ -117,6 +120,8 @@ ggplot(ws,mapping = aes(x=wins+losses)) +
     labs(x="Number of games", y="Frequency")
 ```
 
+
+## Home run rate
 ```{r}
 # Calculate Home run rate (Micky mantle)
 hr_rates <- function(age,hr,ab){
@@ -134,11 +139,12 @@ hr_rates <- hr_rates(Age,HR,AB)
 
 # Writing csv file
 Mantle <- data.frame(Age, HR,AB,Rates=hr_rates$y)
-write.csv(Mantle,"csv_files/mantle.csv")
+#write.csv(Mantle,"csv_files/mantle.csv")
+Mantle
 ```
 
+## Splitting, Applying, and Combining data
 ```{r}
-# Splitting, Applying, and Combining data
 
 # Batting data between 1960 and 1969.
 Batting %>% 
@@ -195,9 +201,9 @@ ggplot(Batting_5000, mapping = aes(x=tHR/tAB, y=tSO/tAB))+
 ```
 We can see clearly that batters with higher home run rates tend to have higher strikeout rates.
 
-# Exercises
+##  Exercises
 
-## 1. Top Base Stealers in the Hall of Fame
+### 1. Top Base Stealers in the Hall of Fame
 ```{r}
 # (a) Create a data frame
 players <- c("Rickey Henderson","Lou Brock","Ty Cobb","Eddie Collins","Max Carey","Joe Morgan","Luis Aparico","Paul Molitor","Roberto Alomar")
@@ -236,7 +242,7 @@ ggplot(sb_df, mapping = aes(x=SB.Game,y=SB.SuccessRate))+
 - Rickey Henderson had the greatest number of stolen bases per game : 0.46 / game.
 
 
-## 2. Character, Factor, and Logical Variables in R
+### 2. Character, Factor, and Logical Variables in R
 
 Suppose one records the outcomes of a batter in ten plate appearance. 
 
@@ -264,7 +270,7 @@ In the first line, it checks the all the value in the outcome vector if the valu
 In the second line, it counts how many "Walk" is in the outcome vector. In this case, it returns 1.
 
 
-# 3. Pitches in the 350-Wins Club
+### 3. Pitches in the 350-Wins Club
 ```{r}
 #(a) Create vectors
 p_players <- c("Pete Alexander","Roger Clements","Pud Galvin","Walter Johnson","Greg Maddux","Christy Mathewson","Kid Nichols","Warren Spahn","Cy Young")
@@ -289,7 +295,7 @@ Wins.350
 - Cy Young
     
 
-# 4. Pitchers in the 350-Wins Club, Continued
+### 4. Pitchers in the 350-Wins Club, Continued
 ```{r}
 # (b)Create a vecor strikeout-walk ratio
 SO.BB.Ratio <- SO/BB
@@ -307,4 +313,35 @@ SO.BB
 ```
 
 1. Did the pitcher with the highest walks have a high or low strikeout-walk ratio?
-- 
+- Roger Clements has the highest walk but lowest SO.BB.Ratio.
+
+
+### 5. Pitcher Strikeout/Walk Ratios
+```{r}
+# (a) Read Pitching file
+head(Pitching)
+
+# (b) Compute the cumulative strikeouts, cumulative walks,mid career year, 
+# and the total innings pitched for all pitchers on the data file.
+
+career_pitching <- Pitching %>% 
+    group_by(playerID) %>% 
+    summarize(SO = sum(SO, na.rm = TRUE),
+              BB = sum(BB, na.rm = TRUE),
+              IPouts = sum(IPouts, na.rm = TRUE),
+              midYear = median(yearID, na.rm = TRUE))
+
+# Merge data sets
+career_pitching <- inner_join(Pitching,career_pitching,by="playerID")
+
+# (c) filter data (IPouts >= 10000)
+career_pitching %>% 
+    filter(IPouts.y >10000) -> career.10000
+
+head(career.10000)
+
+# (d) Scatter plot
+ggplot(career.10000, mapping = aes(x=midYear, y=SO.y/BB.y))+
+    geom_point()
+```
+This scatter plot shows correlation between mid career year and ratio of strikeouts to walks.
