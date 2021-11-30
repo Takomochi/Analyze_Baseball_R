@@ -2,7 +2,9 @@
 title: "Analyzing Baseball Data with R - Introduction to R"
 author: "Tomoka Takegaki"
 date: "23/11/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 This project is to learn analyze baseball data with R. The source is from a book "Analyzing Baseball Data with R". This is a section of "Introduction to R".
